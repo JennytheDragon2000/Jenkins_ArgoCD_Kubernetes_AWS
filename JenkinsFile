@@ -36,28 +36,25 @@ stage('Build and Push Docker Image') {
   }
   steps {
     script {
-      sh 'docker build -t ${DOCKER_IMAGE} .'
-      docker.withRegistry('https://index.docker.io/v1/', "docker-cred") {
-        sh '''
-          echo "Attempting to push Docker image..."
-          docker push ${DOCKER_IMAGE} 2>&1 | tee push_output.txt
-          if [ $? -ne 0 ]; then
-            echo "Docker push failed. Error log:"
-            cat push_output.txt
-            exit 1
-          fi
-        '''
-      }
+      sh """
+        echo "Building Docker image..."
+        docker build -t ${DOCKER_IMAGE} .
+        
+        echo "Logging in to Docker Hub..."
+        echo "$REGISTRY_CREDENTIALS_PSW" | docker login -u "$REGISTRY_CREDENTIALS_USR" --password-stdin
+        
+        echo "Pushing Docker image..."
+        docker push ${DOCKER_IMAGE} 2>&1 | tee push_output.txt
+        
+        echo "Push output:"
+        cat push_output.txt
+      """
     }
   }
   post {
-    failure {
+    always {
       sh 'docker logout'
-      error "Failed to push Docker image. Check the logs for details."
-    }
-    success {
-      sh 'docker logout'
-      echo "Successfully pushed Docker image"
+      echo "Logged out from Docker Hub"
     }
   }
 }
