@@ -6,13 +6,14 @@ pipeline {
     }
   }
 
-stage('Clean Workspace') {
-    steps {
-        sh 'rm -rf /var/lib/jenkins/workspace/argocd/*'
-    }
-}
+
 
   stages {
+    stage('Clean Workspace') {
+        steps {
+            sh 'rm -rf /var/lib/jenkins/workspace/argocd/*'
+        }
+    }
     stage('Checkout') {
       steps {
         sh 'echo passed'
