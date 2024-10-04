@@ -11,6 +11,7 @@ pipeline {
   stages {
     stage('Clean Workspace') {
         steps {
+            sh 'echo cleanup'
             sh 'rm -rf /var/lib/jenkins/workspace/argocd/*'
         }
     }
