@@ -47,10 +47,11 @@ stage('Build and Push Docker Image') {
   }
 }
 
+  }
+
     post {
         always {
             cleanWs()
         }
     }
-  }
 }
