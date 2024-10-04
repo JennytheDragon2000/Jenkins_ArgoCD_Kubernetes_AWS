@@ -9,12 +9,6 @@ pipeline {
 
 
   stages {
-    stage('Clean Workspace') {
-        steps {
-            sh 'echo cleanup'
-            sh 'rm -rf /var/lib/jenkins/workspace/*'
-        }
-    }
     stage('Checkout') {
       steps {
         sh 'echo passed'
@@ -53,5 +47,10 @@ stage('Build and Push Docker Image') {
   }
 }
 
+    post {
+        always {
+            cleanWs()
+        }
+    }
   }
 }
